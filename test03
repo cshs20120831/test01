@@ -1,0 +1,221 @@
+[
+    {
+        "id": "1f2585b2.c60efa",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "f3c12caf.ab956",
+        "type": "tab",
+        "label": "Flow 2"
+    },
+    {
+        "id": "81fd13ca.ef317",
+        "type": "tab",
+        "label": "Flow 3"
+    },
+    {
+        "id": "ac8d538d.eec",
+        "type": "inject",
+        "z": "f3c12caf.ab956",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "207e680a.57ea78"
+            ]
+        ]
+    },
+    {
+        "id": "207e680a.57ea78",
+        "type": "function",
+        "z": "f3c12caf.ab956",
+        "name": "paylod",
+        "func": "msg.headers={\n    deviceKey:\"LJ0SeHiaQzTNmS7P\"\n};\nmsg.payload= \"Humidity,,25\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 260,
+        "wires": [
+            [
+                "f0f44042.2ad4"
+            ]
+        ]
+    },
+    {
+        "id": "f0f44042.2ad4",
+        "type": "http request",
+        "z": "f3c12caf.ab956",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "url": "https://api.mediatek.com/mcs/v2/devices/DC0lJFnh/datapoints.csv",
+        "tls": "",
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "366d88cc.077998",
+                "b4813e16.3a2a7"
+            ]
+        ]
+    },
+    {
+        "id": "366d88cc.077998",
+        "type": "debug",
+        "z": "f3c12caf.ab956",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 730,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "b4813e16.3a2a7",
+        "type": "http response",
+        "z": "f3c12caf.ab956",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 737.8333587646484,
+        "y": 262.66668701171875,
+        "wires": []
+    },
+    {
+        "id": "97271b3a.e10038",
+        "type": "rpi-gpio in",
+        "z": "81fd13ca.ef317",
+        "name": "BUTTON",
+        "pin": "7",
+        "intype": "up",
+        "debounce": "25",
+        "read": false,
+        "x": 60,
+        "y": 220,
+        "wires": [
+            [
+                "cce1e198.5e9ce",
+                "f57b73e9.c8439"
+            ]
+        ]
+    },
+    {
+        "id": "cd8acac4.684618",
+        "type": "rpi-gpio out",
+        "z": "81fd13ca.ef317",
+        "name": "",
+        "pin": "11",
+        "set": "",
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "x": 820,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cce1e198.5e9ce",
+        "type": "switch",
+        "z": "81fd13ca.ef317",
+        "name": "if input is 1",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 290,
+        "y": 220,
+        "wires": [
+            [
+                "bfe5618e.d2be1"
+            ],
+            [
+                "ecd8957b.6aa198"
+            ]
+        ]
+    },
+    {
+        "id": "ecd8957b.6aa198",
+        "type": "change",
+        "z": "81fd13ca.ef317",
+        "name": "change to 0",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "cd8acac4.684618"
+            ]
+        ]
+    },
+    {
+        "id": "bfe5618e.d2be1",
+        "type": "change",
+        "z": "81fd13ca.ef317",
+        "name": "change to 1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "cd8acac4.684618"
+            ]
+        ]
+    },
+    {
+        "id": "f57b73e9.c8439",
+        "type": "debug",
+        "z": "81fd13ca.ef317",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 369.16668701171875,
+        "y": 78,
+        "wires": []
+    }
+]
